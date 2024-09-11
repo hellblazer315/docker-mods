@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ## Buildstage ##
-FROM ghcr.io/linuxserver/baseimage-alpine:3.18 as buildstage-x86_64
+FROM ghcr.io/linuxserver/baseimage-alpine:3.20 as buildstage-x86_64
 
 ARG MOD_VERSION
 
@@ -18,16 +18,10 @@ RUN \
     "https://github.com/animetosho/par2cmdline-turbo/archive/${MOD_VERSION}.tar.gz" && \
   tar xf \
     /tmp/par2cmdline.tar.gz -C \
-    /tmp/par2cmdline --strip-components=1 && \
-  cd /tmp/par2cmdline && \
-  ./automake.sh && \
-  ./configure && \
-  make && \
-  make check && \
-  make install DESTDIR=/root-layer
+    /tmp/par2cmdline --strip-components=1
 
 ## Buildstage ##
-FROM --platform=aarch64 ghcr.io/linuxserver/baseimage-alpine:arm64v8-3.18 as buildstage-aarch64
+FROM --platform=aarch64 ghcr.io/linuxserver/baseimage-alpine:arm64v8-3.20 as buildstage-aarch64
 
 ARG MOD_VERSION
 
@@ -45,17 +39,10 @@ RUN \
     "https://github.com/animetosho/par2cmdline-turbo/archive/${MOD_VERSION}.tar.gz" && \
   tar xf \
     /tmp/par2cmdline.tar.gz -C \
-    /tmp/par2cmdline --strip-components=1 && \
-  cd /tmp/par2cmdline && \
-  ./automake.sh && \
-  ./configure && \
-  make && \
-  make install DESTDIR=/root-layer
+    /tmp/par2cmdline --strip-components=1
 
 FROM scratch as consolidate-builds
 
-COPY --from=buildstage-x86_64 /root-layer/ /par2cmdline-turbo/x86_64
-COPY --from=buildstage-aarch64 /root-layer/ /par2cmdline-turbo/aarch64
 COPY root/ /
 
 ## Single layer deployed image ##
