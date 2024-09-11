@@ -34,7 +34,7 @@ jobs:
             MOD_VERSION=$(curl -s https://api.github.com/repos/animetosho/par2cmdline-turbo/releases/latest | jq -rc ".tag_name")
           else
             MOD_VERSION=${{ env.MOD_VERSION }}
-            MOD_VERSION_OVERRIDE="true" >> $GITHUB_OUTPUT
+            echo "MOD_VERSION_OVERRIDE=true" >> $GITHUB_OUTPUT
           fi
           echo "MOD_VERSION=${MOD_VERSION}" >> $GITHUB_OUTPUT
     outputs:
